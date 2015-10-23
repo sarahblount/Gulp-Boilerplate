@@ -7,9 +7,8 @@ var gulp = require('gulp'),
   browserify = require('gulp-browserify'),
   filter = require('gulp-filter'),
   babel = require('gulp-babel'),
-  chmod = require('gulp-chmod'),
-  stripDebug = require('gulp-strip-debug'),
-  vinylPaths = require('vinyl-paths'),
+  uglify = require('gulp-uglify'),
+  plumber = require('gulp-plumber'),
 
  	src_root = './src/app',
 	build_root = './build/app',
@@ -24,33 +23,33 @@ gulp.task('clean', function () {
 });
 
 // Styles
-gulp.task('sass', function () {
-  return sass(src_root + '/stylesheets', { sourcemap: true })
-    .on('error', sass.logError)
+gulp.task('sass', ['clean'], function () {
+  return sass(src_root + '/stylesheets/**/*.sass', { sourcemap: true })
     .pipe(sourcemaps.write('maps', {
       includeContent: false,
       sourceRoot: 'source'
     }))
+    .pipe(plumber())
     .pipe(gulp.dest(build_root + '/stylesheets'));
 });
 
 
 // Copy fonts
-gulp.task('copy_fonts', function() {
+gulp.task('copy_fonts', ['clean'], function() {
 	return gulp.src(src_root + '/fonts')
 		.pipe(gulp.dest(build_root + '/fonts'));
 });
 
 
 // Copy images
-gulp.task('copy_images', function() {
+gulp.task('copy_images', ['clean'], function() {
 	return gulp.src(src_root + '/images')
 		.pipe(gulp.dest(build_root + '/images'));
 });
 
 
 // Minify svgs
-gulp.task('svgmin', function () {
+gulp.task('svgmin', ['clean'], function () {
   return gulp.src(src_root + '/images/**/*.svg')
     .pipe(svgmin({
       plugins: [{
@@ -63,12 +62,13 @@ gulp.task('svgmin', function () {
 });
 
 // Javascript
-gulp.task('js', function() {
+gulp.task('js', ['clean'], function() {
   gulp.src(src_root + '/javascript/**/*.js')
     .pipe(babel())
     .pipe(gulp.dest(compile_root + '/javascript'))
     .pipe(browserify())
     .pipe(filter('application.js'))
+    .pipe(uglify())
     .pipe(gulp.dest(build_root + '/javascript'));
 });
 
@@ -80,4 +80,8 @@ gulp.task('connect', function() {
   });
 });
 
-gulp.task('default', ['clean', 'sass', 'js', 'copy_fonts', 'copy_images', 'svgmin']);
+gulp.task('default', ['clean', 'sass', 'js', 'copy_fonts', 'copy_images', 'svgmin'], function () {
+  gulp.watch(src_root + '/javascript/**', ['js']);
+  gulp.watch(src_root + '/stylesheets/**', ['sass']);
+  gulp.watch(src_root + '/images/**', ['copy_images', 'svgmin']);
+});
