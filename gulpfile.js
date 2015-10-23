@@ -4,9 +4,16 @@ var gulp = require('gulp'),
  	sourcemaps = require('gulp-sourcemaps'),
  	svgmin = require('gulp-svgmin'),
  	connect = require('gulp-connect'),
+  browserify = require('gulp-browserify'),
+  filter = require('gulp-filter'),
+  babel = require('gulp-babel'),
+  chmod = require('gulp-chmod'),
+  stripDebug = require('gulp-strip-debug'),
+  vinylPaths = require('vinyl-paths'),
 
- 	src_root = 'user_interface/app',
-	build_root = 'themes/rawnet/app';
+ 	src_root = './src/app',
+	build_root = './build/app',
+  compile_root = './compile/app';
 
 
 // Clean
@@ -15,7 +22,6 @@ gulp.task('clean', function () {
     build_root
   ]);
 });
-
 
 // Styles
 gulp.task('sass', function () {
@@ -56,6 +62,16 @@ gulp.task('svgmin', function () {
     .pipe(gulp.dest(build_root + '/images'));
 });
 
+// Javascript
+gulp.task('js', function() {
+  gulp.src(src_root + '/javascript/**/*.js')
+    .pipe(babel())
+    .pipe(gulp.dest(compile_root + '/javascript'))
+    .pipe(browserify())
+    .pipe(filter('application.js'))
+    .pipe(gulp.dest(build_root + '/javascript'));
+});
+
 // Connect
 gulp.task('connect', function() {
   connect.server({
@@ -64,6 +80,4 @@ gulp.task('connect', function() {
   });
 });
 
-gulp.task('default', ['clean'], function() {
-    gulp.start('sass', 'copy_fonts', 'copy_images', 'svgmin', 'connect');
-});
+gulp.task('default', ['clean', 'sass', 'js', 'copy_fonts', 'copy_images', 'svgmin']);
