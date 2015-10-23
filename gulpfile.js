@@ -9,6 +9,7 @@ var gulp = require('gulp'),
   babel = require('gulp-babel'),
   uglify = require('gulp-uglify'),
   plumber = require('gulp-plumber'),
+  zetzer = require('gulp-zetzer'),
 
  	src_root = './src/app',
 	build_root = './build/app',
@@ -72,6 +73,19 @@ gulp.task('js', ['clean'], function() {
     .pipe(gulp.dest(build_root + '/javascript'));
 });
 
+// Zetzer
+gulp.task('zetzer', ['clean'], function () {
+  gulp.src('./src/pages/*.html')
+    .pipe(zetzer({
+      partials: './src/partials',
+      templates: './src/layouts',
+      dot_template_settings: {
+        strip: false
+      }
+    }))
+    .pipe(gulp.dest('build'));
+});
+
 // Connect
 gulp.task('connect', function() {
   connect.server({
@@ -80,7 +94,7 @@ gulp.task('connect', function() {
   });
 });
 
-gulp.task('default', ['clean', 'sass', 'js', 'copy_fonts', 'copy_images', 'svgmin'], function () {
+gulp.task('default', ['clean', 'sass', 'js', 'copy_fonts', 'copy_images', 'svgmin', 'zetzer'], function () {
   gulp.watch(src_root + '/javascript/**', ['js']);
   gulp.watch(src_root + '/stylesheets/**', ['sass']);
   gulp.watch(src_root + '/images/**', ['copy_images', 'svgmin']);
