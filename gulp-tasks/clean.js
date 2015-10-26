@@ -1,7 +1,7 @@
 module.exports = function(gulp, $) {
   return function () {
     return $.del([
-      $.build_root
+      $.folders.build_root
     ]);
   }
 }

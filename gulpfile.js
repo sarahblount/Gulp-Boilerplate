@@ -1,19 +1,10 @@
 /* ===== SETUP ====== */
 var gulp = require('gulp'),
-    $ = require('gulp-load-plugins')({
-      pattern: ['gulp-*', 'gulp.*', 'del'],
-      replaceString: /\bgulp[\-.]/,
-      scope: ['dependencies', 'devDependencies', 'peerDependencies'],
-      lazy: false,
-      rename: {
-        'gulp-ruby-sass': 'sass'
-      }
-    }),
-    tasks = ['clean', 'sass', 'copy_fonts', 'copy_images', 'svgmin', 'js', 'zetzer'];
+    fs = require('fs'),
+    config = require('./gulpconfig.js'),
+    $ = require('gulp-load-plugins')(config.gulp_load_plugins);
 
-$.src_root = './src/app';
-$.build_root = './build/app';
-$.compile_root = './compile/app';
+$.folders = config.folders;
 
 function get_task(task) {
   return require('./gulp-tasks/' + task)(gulp, $);
@@ -28,7 +19,7 @@ function load_tasks(tasks) {
 
 /* ===== TASKS ====== */
 
-load_tasks(tasks);
+load_tasks(config.tasks);
 
 gulp.task('default', ['clean', 'sass', 'js', 'copy_fonts', 'copy_images', 'svgmin', 'zetzer'], function () {
   gulp.watch($.src_root + '/javascript/**', ['js']);
