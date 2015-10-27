@@ -1,6 +1,6 @@
 module.exports = function(gulp, $) {
   return function () {
-    return gulp.src($.src_root + '/images/**/*.svg')
+    return gulp.src($.folders.src_root + '/images/**/*.svg')
       .pipe($.svgmin({
         plugins: [{
             removeViewBox: false
@@ -8,6 +8,6 @@ module.exports = function(gulp, $) {
           removeUselessStrokeAndFill: false
         }]
       }))
-      .pipe(gulp.dest($.build_root + '/images'));
+      .pipe(gulp.dest($.folders.build_root + '/images'));
     }
 }

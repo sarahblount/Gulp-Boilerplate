@@ -22,7 +22,7 @@ function load_tasks(tasks) {
 load_tasks(config.tasks);
 
 gulp.task('default', ['clean', 'sass', 'js', 'copy_fonts', 'copy_images', 'svgmin', 'zetzer'], function () {
-  gulp.watch($.src_root + '/javascript/**', ['js']);
-  gulp.watch($.src_root + '/stylesheets/**', ['sass']);
-  gulp.watch($.src_root + '/images/**', ['copy_images', 'svgmin']);
+  gulp.watch($.folders.src_root + '/javascript/**', ['js']);
+  gulp.watch($.folders.src_root + '/stylesheets/**', ['sass']);
+  gulp.watch($.folders.src_root + '/images/**', ['copy_images', 'svgmin']);
 });

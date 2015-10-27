@@ -1,6 +1,6 @@
 module.exports = function(gulp, $) {
   return function () {
-    return gulp.src($.src_root + '/images')
-      .pipe(gulp.dest($.build_root + '/images'));
+    return gulp.src($.folders.src_root + '/images')
+      .pipe(gulp.dest($.folders.build_root + '/images'));
   }
 }
