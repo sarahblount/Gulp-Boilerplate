@@ -1,6 +1,7 @@
 module.exports = function(gulp, $) {
   return function () {
     return $.sass($.folders.src_root + '/stylesheets/**/*.sass', { sourcemap: true })
+      .pipe($.plumber())
       .pipe($.sourcemaps.write('maps', {
         includeContent: false,
         sourceRoot: 'source'

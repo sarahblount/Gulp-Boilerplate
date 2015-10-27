@@ -10,19 +10,18 @@ function get_task(task) {
   return require('./gulp-tasks/' + task)(gulp, $);
 }
 
-function load_tasks(tasks) {
-  tasks.map(function (task) {
-    gulp.task(task, get_task(task));
-  });
-}
-
-
 /* ===== TASKS ====== */
 
-load_tasks(config.tasks);
+gulp.task('clean', get_task('clean'));
+gulp.task('sass', ['clean'], get_task('sass'));
+gulp.task('js', ['clean'], get_task('js'));
+gulp.task('copy_fonts', ['clean'], get_task('copy_fonts'));
+gulp.task('copy_images', ['clean'], get_task('copy_images'));
+gulp.task('svgmin', ['clean'], get_task('svgmin'));
+gulp.task('zetzer', ['clean'], get_task('zetzer'));
 
 gulp.task('default', ['clean', 'sass', 'js', 'copy_fonts', 'copy_images', 'svgmin', 'zetzer'], function () {
-  gulp.watch($.folders.src_root + '/javascript/**', ['js']);
-  gulp.watch($.folders.src_root + '/stylesheets/**', ['sass']);
-  gulp.watch($.folders.src_root + '/images/**', ['copy_images', 'svgmin']);
+  gulp.watch($.folders.src_root + '/javascript/**/*.js', ['js']);
+  gulp.watch($.folders.src_root + '/stylesheets/**/*.sass', ['sass']);
+  gulp.watch($.folders.src_root + '/images/**/*', ['copy_images', 'svgmin']);
 });
